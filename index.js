@@ -1,8 +1,11 @@
 const fs = require('fs');
 const { EOL } = require('os');
-const ERROR_CHAR = "?"
+const ERROR_CHAR = "?";
 
 const entryLineSize = 4;
+const accountLength = 9;
+const numberLength = 3;
+
 const entries = {
     "1": "   " +
         "  |" +
@@ -55,8 +58,8 @@ const checkLastLineIsEmpty = (fileContent) => {
 }
 
 const checkLineLength = (fileContent) => {
-    const contentLines = fileContent.split(EOL).slice(0, 3)
-    return contentLines.some((x) => x.length != 27) == false;
+    const contentLines = fileContent.split(EOL).slice(0, numberLength)
+    return contentLines.some((x) => x.length != accountLength * numberLength) == false;
 }
 
 const syntaxCheck = (fileContent) => {
@@ -67,8 +70,8 @@ const syntaxCheck = (fileContent) => {
 }
 
 const getNumber = (fileContent, offset) => {
-    const contentLines = fileContent.split(EOL).slice(0, 3);
-    const numberString = contentLines.map((line) => line.slice(offset * 3, (offset + 1) * 3)).join('');
+    const contentLines = fileContent.split(EOL).slice(0, numberLength);
+    const numberString = contentLines.map((line) => line.slice(offset * numberLength, (offset + 1) * numberLength)).join('');
     for (const [value, entry] of Object.entries(entries)) {
         if (entry == numberString) {
             return value;
@@ -78,7 +81,7 @@ const getNumber = (fileContent, offset) => {
 }
 
 const getBankAccountNumber = (fileContent) => {
-    return [...Array(9).keys()].map((offset) => getNumber(fileContent, offset).toString()).join('');
+    return [...Array(accountLength).keys()].map((offset) => getNumber(fileContent, offset).toString()).join('');
 }
 
 module.exports = {
